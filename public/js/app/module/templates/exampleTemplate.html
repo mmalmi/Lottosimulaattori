@@ -1,0 +1,69 @@
+<div class="row">
+	<div class="hero-unit">
+		<h1>Lottosimulaattori</h1>
+		<p>Koe lottoamisen ilo ilmaiseksi!</p>
+	</div>
+</div>
+<div class="row">
+    <div class="span12">
+        <h1>Pelaa</h1>
+        <div class="row">
+            <div class="span4">
+                <h2>Asetukset</h2>
+                <div><label>Aloituspäivä</label> <input disabled="disabled" type="text" value="<%= startDateString %>" id="startDate"/></div>
+                <div><label>Rivin hinta</label> <input disabled="disabled" type="text" value="<%= rowPrice %> €" id="rowPrice"/></div>
+                <div><label>Rivejä viikossa</label> <input type="text" value="<%= rowsPerWeek %>" id="rowsPerWeek" <%= gameRunning ? "disabled=\"disabled\"" : "" %>/></div>
+           		<div class="btn-group">
+           			<button class="btn btn-large btn-primary" id="play"><%= gameRunning ? "Pysäytä" : "Pelaa" %></button>
+           			<button class="btn btn-large btn-primary" id="reset" <%= gameRunning ? "disabled=\"disabled\"" : "" %>>Nollaa</button>
+           		</div>
+           		<div class="alert" style="display:none">
+           			<button class="close" data-dismiss="alert">×</button>
+           			<strong>Error: </strong><% if (typeof error != 'undefined') print(error); %>
+       			</div>
+           		<div id="slider"> </div>
+            </div>
+            <div class="span4">
+                <h2>Voitot</h2>
+                <% _.each(winnings, function(winning) {
+                	print("<div><span class=\"badge badge-info\">"+winning[3]+"</span> "+winning[0]+"</div>");
+               	}) %>
+            </div>
+            <div class="span4">
+                <h2>Tilastot</h2>
+                <div>Päivämäärä <b><%= currentDateString %></b></div>
+                <div>Pelattuja rivejä <b><%= currentWeek * rowsPerWeek %></b></div>
+                <div>Rahaa kulunut <b><%= rowPrice * currentWeek * rowsPerWeek %></b> €</div>
+                <div>Voitot yhteensä <b><%= moneyWon %></b> €</div>
+                <div>Yhteensä <b><%= moneyWon - rowPrice * currentWeek * rowsPerWeek %></b> €</div>
+            </div>
+        </div>
+        <div class="row">
+        	<div class="span4">
+        		<h2>Graafi</h2>
+        	<div>
+        		<script> 
+ 
+				var graph = new Rickshaw.Graph( {
+				    element: document.querySelector("#chart"), 
+				    width: 300, 
+				    height: 200, 
+				    series: [{
+				        color: 'steelblue',
+				        data: [ 
+				            { x: 0, y: 40 }, 
+				            { x: 1, y: 49 }, 
+				            { x: 2, y: 38 }, 
+				            { x: 3, y: 30 }, 
+				            { x: 4, y: 32 } ]
+				    }]
+				});
+				 
+				graph.render();
+				 
+				</script> 
+        	</div>
+    		</div>
+        </div>
+    </div>
+</div>
