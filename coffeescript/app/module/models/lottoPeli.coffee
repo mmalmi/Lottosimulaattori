@@ -58,21 +58,35 @@ define ->
       }
       @raffle()
     
-    checkForLotteryWin: (probability) ->
-      randomNumber = Math.floor(Math.random() * probability)
-      # console.log randomNumber
-      randomNumber == 1
+    checkForLotteryWins: (rows, probability) ->
+      wins = 0
+      if rows < 50
+      	for [1..rows]
+          randomNumber = Math.floor(Math.random() * probability)
+          if randomNumber == 0
+            wins = wins + 1
+      else
+        prod = 1
+        target = Math.exp(-rows / probability)
+        while true
+          prod = prod * Math.random()
+          if prod < target
+            break
+          wins = wins + 1
+      wins
     
     incrementAttribute: (attribute, increment) ->
       @set attribute, @get(attribute) + increment
     
     raffle: ->
-      for [1..@get("rowsPerWeek")]
-        for winning in @get "winnings"
-          if @checkForLotteryWin winning[1]
-            @set "moneyWon", @get("moneyWon") + winning[2]
-            winning[3] = winning[3] + 1
-            break
+      rows = @get("rowsPerWeek")
+      for winning in @get "winnings"
+        wins = @checkForLotteryWins (rows winning[1])
+        @set "moneyWon", @get("moneyWon") + (winning[2] * wins)
+        winning[3] = winning[3] + wins
+        rows = rows - wins
+        if rows == 0
+          break
 
     isRunning: ->
       @get "gameRunning"
