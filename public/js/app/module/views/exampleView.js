@@ -8,13 +8,14 @@
       events: {
         "click #play": "playButtonPressed",
         "click #reset": "resetButtonPressed",
-        "change #rowsPerWeek": "settingsChanged"
+        "change #rowsPerWeek": "settingsChanged",
+        "slidechange": "settingsChanged"
       },
       settingsChanged: function() {
-        this.model.set({
+        return this.model.set({
+          "sleepTime": this.model.get("maxSleepTime") - this.$("#slider").slider("option", "value"),
           "rowsPerWeek": this.$("#rowsPerWeek").val()
         });
-        return console.log("rowsPerWeek: " + this.model.get("rowsPerWeek"));
       },
       resetButtonPressed: function() {
         this.model = new LottoPeli;
@@ -50,6 +51,10 @@
       },
       render: function() {
         this.$el.html(this.template(this.model.toJSON()));
+        this.$("#slider").slider({
+          max: this.model.get("maxSleepTime") - this.model.get("minSleepTime"),
+          value: this.model.get("maxSleepTime") - this.model.get("sleepTime")
+        });
         return this;
       }
     });

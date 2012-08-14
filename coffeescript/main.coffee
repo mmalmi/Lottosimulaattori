@@ -4,6 +4,7 @@ requirejs.config({
     bootstrap: 'ext/bootstrap-2.0.2.amd'
     handlebars: 'ext/handlebars-1.0.0.beta.6'
     jquery: 'ext/jquery-1.7.2.min'
+    jquery_ui: 'ext/jquery-ui.min'
     underscore: 'ext/underscore-1.3.1.min'
 })
 
@@ -20,6 +21,7 @@ require [
   require [
     'app/module/router/example'
     'domReady'
+    'jquery_ui'
   ], (ExampleRouter, domReady) ->
     domReady(->
       router = new ExampleRouter()

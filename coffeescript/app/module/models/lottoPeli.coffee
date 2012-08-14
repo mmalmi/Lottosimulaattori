@@ -8,6 +8,8 @@ define ->
       rowPrice: 1
       gameRunning: false
       sleepTime: 300
+      minSleepTime: 50
+      maxSleepTime: 1500
       moneyWon: 0
           
     initialize: ->
@@ -39,6 +41,8 @@ define ->
         return "Rivien määrän on oltava positiivinen"
       if attribs.rowsPerWeek > 100000
         return "Rivien määrän on oltava korkeintaan 100000"
+      if attribs.sleepTime > @maxSleepTime
+        return "Sleeptime too big"
     
     getFinnishDateString: (date) ->
       return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear()
@@ -81,7 +85,7 @@ define ->
     raffle: ->
       rows = @get("rowsPerWeek")
       for winning in @get "winnings"
-        wins = @checkForLotteryWins (rows winning[1])
+        wins = @checkForLotteryWins rows, winning[1]
         @set "moneyWon", @get("moneyWon") + (winning[2] * wins)
         winning[3] = winning[3] + wins
         rows = rows - wins

@@ -7,18 +7,15 @@
       bootstrap: 'ext/bootstrap-2.0.2.amd',
       handlebars: 'ext/handlebars-1.0.0.beta.6',
       jquery: 'ext/jquery-1.7.2.min',
-      bootstrap_alert: 'ext/bootstrap-alert',
-      rickshaw: 'ext/rickshaw.min',
-      d3: 'ext/d3.min',
-      d3_layout: 'ext/d3.layout.min',
+      jquery_ui: 'ext/jquery-ui.min',
       underscore: 'ext/underscore-1.3.1.min'
     }
   });
 
-  require(['backbone', 'jquery', 'underscore', 'rickshaw', 'd3', 'd3_layout'], function(Backbone, $, _, rickshaw, d3, d3_layout) {
+  require(['backbone', 'jquery', 'underscore'], function(Backbone, $, _) {
     window._ = _;
     window.Backbone = Backbone;
-    return require(['app/module/router/example', 'domReady'], function(ExampleRouter, domReady) {
+    return require(['app/module/router/example', 'domReady', 'jquery_ui'], function(ExampleRouter, domReady) {
       return domReady(function() {
         var router;
         router = new ExampleRouter();

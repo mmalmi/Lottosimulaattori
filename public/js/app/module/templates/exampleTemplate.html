@@ -13,6 +13,7 @@
                 <div><label>Aloituspäivä</label> <input disabled="disabled" type="text" value="<%= startDateString %>" id="startDate"/></div>
                 <div><label>Rivin hinta</label> <input disabled="disabled" type="text" value="<%= rowPrice %> €" id="rowPrice"/></div>
                 <div><label>Rivejä viikossa</label> <input type="text" value="<%= rowsPerWeek %>" id="rowsPerWeek" <%= gameRunning ? "disabled=\"disabled\"" : "" %>/></div>
+           		<div><label>Nopeus</label><div id="slider" style="margin:10px 1px;width:217px"></div></div>
            		<div class="btn-group">
            			<button class="btn btn-large btn-primary" id="play"><%= gameRunning ? "Pysäytä" : "Pelaa" %></button>
            			<button class="btn btn-large btn-primary" id="reset" <%= gameRunning ? "disabled=\"disabled\"" : "" %>>Nollaa</button>
@@ -21,7 +22,6 @@
            			<button class="close" data-dismiss="alert">×</button>
            			<strong>Error: </strong><% if (typeof error != 'undefined') print(error); %>
        			</div>
-           		<div id="slider"> </div>
             </div>
             <div class="span4">
                 <h2>Voitot</h2>
@@ -38,32 +38,9 @@
                 <div>Yhteensä <b><%= moneyWon - rowPrice * currentWeek * rowsPerWeek %></b> €</div>
             </div>
         </div>
-        <div class="row">
+        <div class="row" style="display:none">
         	<div class="span4">
         		<h2>Graafi</h2>
-        	<div>
-        		<script> 
- 
-				var graph = new Rickshaw.Graph( {
-				    element: document.querySelector("#chart"), 
-				    width: 300, 
-				    height: 200, 
-				    series: [{
-				        color: 'steelblue',
-				        data: [ 
-				            { x: 0, y: 40 }, 
-				            { x: 1, y: 49 }, 
-				            { x: 2, y: 38 }, 
-				            { x: 3, y: 30 }, 
-				            { x: 4, y: 32 } ]
-				    }]
-				});
-				 
-				graph.render();
-				 
-				</script> 
-        	</div>
-    		</div>
         </div>
     </div>
 </div>

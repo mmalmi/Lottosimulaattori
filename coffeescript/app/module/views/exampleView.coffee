@@ -11,11 +11,12 @@ define [
       "click #play" : "playButtonPressed",
       "click #reset" : "resetButtonPressed",
       "change #rowsPerWeek" : "settingsChanged"
-      }
+      "slidechange" : "settingsChanged" }
 
     settingsChanged: ->
-      @model.set({"rowsPerWeek" : @$("#rowsPerWeek").val()})
-      console.log "rowsPerWeek: " + @model.get("rowsPerWeek")
+      @model.set {
+        "sleepTime" : @model.get("maxSleepTime") - @$("#slider").slider("option", "value"),
+        "rowsPerWeek" : @$("#rowsPerWeek").val() }
 
     resetButtonPressed: ->
       @model = new LottoPeli
@@ -45,4 +46,7 @@ define [
 
     render: ->
       @$el.html(@template(@model.toJSON()))
+      @$("#slider").slider {
+        max: @model.get("maxSleepTime") - @model.get("minSleepTime"),
+        value: @model.get("maxSleepTime") - @model.get("sleepTime") }
       return this

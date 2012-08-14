@@ -11,6 +11,8 @@
         rowPrice: 1,
         gameRunning: false,
         sleepTime: 300,
+        minSleepTime: 50,
+        maxSleepTime: 1500,
         moneyWon: 0
       },
       initialize: function() {
@@ -34,6 +36,9 @@
         if (attribs.rowsPerWeek > 100000) {
           return "Rivien määrän on oltava korkeintaan 100000";
         }
+        if (attribs.sleepTime > this.maxSleepTime) {
+          return "Sleeptime too big";
+        }
       },
       getFinnishDateString: function(date) {
         return date.getDate() + "." + (date.getMonth() + 1) + "." + date.getFullYear();
@@ -53,34 +58,48 @@
         });
         return this.raffle();
       },
-      checkForLotteryWin: function(probability) {
-        var randomNumber;
-        randomNumber = Math.floor(Math.random() * probability);
-        return randomNumber === 1;
+      checkForLotteryWins: function(rows, probability) {
+        var prod, randomNumber, target, wins, _i;
+        wins = 0;
+        if (rows < 50) {
+          for (_i = 1; 1 <= rows ? _i <= rows : _i >= rows; 1 <= rows ? _i++ : _i--) {
+            randomNumber = Math.floor(Math.random() * probability);
+            if (randomNumber === 0) {
+              wins = wins + 1;
+            }
+          }
+        } else {
+          prod = 1;
+          target = Math.exp(-rows / probability);
+          while (true) {
+            prod = prod * Math.random();
+            if (prod < target) {
+              break;
+            }
+            wins = wins + 1;
+          }
+        }
+        return wins;
       },
       incrementAttribute: function(attribute, increment) {
         return this.set(attribute, this.get(attribute) + increment);
       },
       raffle: function() {
-        var winning, _i, _ref, _results;
+        var rows, winning, wins, _i, _len, _ref, _results;
+        rows = this.get("rowsPerWeek");
+        _ref = this.get("winnings");
         _results = [];
-        for (_i = 1, _ref = this.get("rowsPerWeek"); 1 <= _ref ? _i <= _ref : _i >= _ref; 1 <= _ref ? _i++ : _i--) {
-          _results.push((function() {
-            var _j, _len, _ref1, _results1;
-            _ref1 = this.get("winnings");
-            _results1 = [];
-            for (_j = 0, _len = _ref1.length; _j < _len; _j++) {
-              winning = _ref1[_j];
-              if (this.checkForLotteryWin(winning[1])) {
-                this.set("moneyWon", this.get("moneyWon") + winning[2]);
-                winning[3] = winning[3] + 1;
-                break;
-              } else {
-                _results1.push(void 0);
-              }
-            }
-            return _results1;
-          }).call(this));
+        for (_i = 0, _len = _ref.length; _i < _len; _i++) {
+          winning = _ref[_i];
+          wins = this.checkForLotteryWins(rows, winning[1]);
+          this.set("moneyWon", this.get("moneyWon") + (winning[2] * wins));
+          winning[3] = winning[3] + wins;
+          rows = rows - wins;
+          if (rows === 0) {
+            break;
+          } else {
+            _results.push(void 0);
+          }
         }
         return _results;
       },
